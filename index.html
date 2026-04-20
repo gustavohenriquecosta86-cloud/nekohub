@@ -1,1 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>NekoHub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+
+
+<div id="login" class="box">
+  <h2>NekoHub 🔐</h2>
+
+  <input id="code" placeholder="Digite seu código">
+  <button onclick="login()">Entrar</button>
+
+  <p id="error"></p>
+</div>
+
+
+<div id="app">
+
+  <h1 id="user"></h1>
+
+  <div id="chat"></div>
+
+  <input id="msg" placeholder="Mensagem">
+  <button onclick="send()">Enviar</button>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
