@@ -1,38 +1,65 @@
 body {
-  background: #000;
-  color: #fff;
+  margin: 0;
   font-family: Arial;
-  text-align: center;
+  background: #0d0d0d;
+  color: white;
 }
 
-.box {
-  margin-top: 100px;
+
+.container {
+  text-align: center;
+  margin-top: 150px;
 }
 
 input {
-  padding: 10px;
-  margin: 5px;
+  padding: 12px;
+  margin: 10px;
   border-radius: 8px;
   border: none;
+  width: 200px;
 }
 
 button {
-  padding: 10px;
+  padding: 12px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  background: #1f1f1f;
+  color: white;
 }
+
 
 #app {
   display: none;
 }
 
-#chat {
+.topbar {
   background: #111;
-  height: 300px;
-  margin: 20px auto;
-  width: 80%;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#chat {
+  height: 400px;
   overflow-y: auto;
+  padding: 15px;
+}
+
+.message {
+  margin: 5px 0;
+}
+
+.send-box {
+  display: flex;
   padding: 10px;
-  border-radius: 10px;
+  background: #111;
+}
+
+.send-box input {
+  flex: 1;
+}
+
+.send-box button {
+  margin-left: 10px;
 }
