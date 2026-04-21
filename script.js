@@ -1,40 +1,63 @@
-
-const users = {
-  "G27S72": "Gustavo 🌟",
-  "S58S78": "Sarah 💫 ",
-  "J37L47": "Jamilly 🧒",
-  "A-WI299": "André 🧑"
-};
-
 let currentUser = "";
 
 
 function login() {
-  let code = document.getElementById("code").value;
+  let name = document.getElementById("username").value;
 
-  if (users[code]) {
-    currentUser = users[code];
-
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
-    document.getElementById("user").innerText = "Bem-vindo " + currentUser;
-
-  } else {
-    document.getElementById("error").innerText = "Código inválido!";
+  if (name.trim() === "") {
+    alert("Digite um nome!");
+    return;
   }
+
+  currentUser = name;
+
+  localStorage.setItem("user", name);
+
+  entrar();
+}
+
+/
+
+function entrar() {
+  document.getElementById("login").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  document.getElementById("welcome").innerText = "Olá, " + currentUser + " 👋";
+}
+
+/
+
+window.onload = function () {
+  let user = localStorage.getItem("user");
+
+  if (user) {
+    currentUser = user;
+    entrar();
+  }
+};
+
+
+function logout() {
+  localStorage.removeItem("user");
+  location.reload();
 }
 
 
 function send() {
   let msg = document.getElementById("msg").value;
 
+  if (msg.trim() === "") return;
+
   let chat = document.getElementById("chat");
 
-  let p = document.createElement("p");
-  p.innerText = currentUser + ": " + msg;
+  let div = document.createElement("div");
+  div.className = "message";
 
-  chat.appendChild(p);
+  div.innerText = currentUser + ": " + msg;
+
+  chat.appendChild(div);
 
   document.getElementById("msg").value = "";
+
+  chat.scrollTop = chat.scrollHeight;
 }
