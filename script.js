@@ -1,7 +1,7 @@
 
 const users = {
   "G27S72": "Gustavo 🌟",
-  "S58S78": "Sarah ❤️",
+  "S58S78": "Sarah 💫 ",
   "J37L47": "Jamilly 🧒",
   "A-WI299": "André 🧑"
 };
