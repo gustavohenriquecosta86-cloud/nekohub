@@ -2,31 +2,33 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>NekoHub</title>
+  <title>NekoHub 🐾</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 
-<div id="login" class="box">
-  <h2>NekoHub 🔐</h2>
-
-  <input id="code" placeholder="Digite seu código">
+<div id="login" class="container">
+  <h1>NekoHub 🐾</h1>
+  <input id="username" placeholder="Digite seu nome">
   <button onclick="login()">Entrar</button>
-
-  <p id="error"></p>
 </div>
 
 
 <div id="app">
 
-  <h1 id="user"></h1>
+  <div class="topbar">
+    <h2 id="welcome"></h2>
+    <button onclick="logout()">Sair</button>
+  </div>
 
   <div id="chat"></div>
 
-  <input id="msg" placeholder="Mensagem">
-  <button onclick="send()">Enviar</button>
+  <div class="send-box">
+    <input id="msg" placeholder="Digite uma mensagem...">
+    <button onclick="send()">Enviar</button>
+  </div>
 
 </div>
 
