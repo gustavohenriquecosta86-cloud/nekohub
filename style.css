@@ -5,18 +5,9 @@ body {
   color: white;
 }
 
-
 .container {
   text-align: center;
   margin-top: 150px;
-}
-
-input {
-  padding: 12px;
-  margin: 10px;
-  border-radius: 8px;
-  border: none;
-  width: 200px;
 }
 
 button {
@@ -27,7 +18,6 @@ button {
   background: #1f1f1f;
   color: white;
 }
-
 
 #app {
   display: none;
@@ -58,6 +48,9 @@ button {
 
 .send-box input {
   flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
 }
 
 .send-box button {
