@@ -1,29 +1,19 @@
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+const firebaseConfig = {
+  apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
+  authDomain: "nekohub-3dd91.firebaseapp.com",
+  projectId: "nekohub-3dd91",
+  storageBucket: "nekohub-3dd91.firebasestorage.app",
+  messagingSenderId: "606476027160",
+  appId: "1:606476027160:web:ed34a10668f358d89dca6d"
+};
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
-    authDomain: "nekohub-3dd91.firebaseapp.com",
-    projectId: "nekohub-3dd91",
-    storageBucket: "nekohub-3dd91.firebasestorage.app",
-    messagingSenderId: "606476027160",
-    appId: "1:606476027160:web:ed34a10668f358d89dca6d"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script> 
-
+// INIT (compat mode)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 let currentUser = "";
 
-// 🔵 LOGIN GOOGLE
+// LOGIN GOOGLE
 function loginGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
 
@@ -34,10 +24,11 @@ function loginGoogle() {
       currentUser = user.displayName || user.email.split("@")[0];
 
       entrar();
-    });
+    })
+    .catch(err => console.log(err));
 }
 
-// 🟢 ENTRAR NO APP
+// ENTRAR
 function entrar() {
   document.getElementById("login").style.display = "none";
   document.getElementById("app").style.display = "block";
@@ -46,7 +37,7 @@ function entrar() {
     "Olá, " + currentUser + " 👋";
 }
 
-// 🔵 AUTO LOGIN
+// AUTO LOGIN
 auth.onAuthStateChanged((user) => {
   if (user) {
     currentUser = user.displayName || user.email.split("@")[0];
@@ -54,13 +45,13 @@ auth.onAuthStateChanged((user) => {
   }
 });
 
-// 🔴 LOGOUT
+// LOGOUT
 function logout() {
   auth.signOut();
   location.reload();
 }
 
-// 💬 CHAT
+// CHAT
 function send() {
   let msg = document.getElementById("msg").value;
 
@@ -76,6 +67,5 @@ function send() {
   chat.appendChild(div);
 
   document.getElementById("msg").value = "";
-
   chat.scrollTop = chat.scrollHeight;
 }
