@@ -20,7 +20,7 @@ function loginGoogle() {
   auth.signInWithPopup(provider).catch(err => console.log(err));
 }
 
-// CONTROLE TOTAL DO LOGIN
+// CONTROLE DE LOGIN
 auth.onAuthStateChanged((user) => {
   if (user) {
     currentUser = user.displayName || user.email.split("@")[0];
@@ -43,11 +43,11 @@ function logout() {
   auth.signOut();
 }
 
-// ENVIAR
+// ENVIAR MENSAGEM
 function send() {
   let msg = document.getElementById("msg").value;
 
-  if (!msg.trim()) return;
+  if (!msg.trim() || !currentUser) return;
 
   db.ref("messages").push({
     user: currentUser,
@@ -58,79 +58,26 @@ function send() {
   document.getElementById("msg").value = "";
 }
 
-// CHAT TEMPO REAL
+// INICIAR CHAT
 function startChat() {
   const chat = document.getElementById("chat");
   chat.innerHTML = "";
 
-  db.ref("messages").off(); // limpa duplicação
+  db.ref("messages").off();
 
   db.ref("messages").on("child_added", (snapshot) => {
     let data = snapshot.val();
 
     let div = document.createElement("div");
     div.className = "message";
-    div.innerText = data.user + ": " + data.text;
+
+    // 🔥 proteção contra bug de nome vazio
+    let user = data.user || "Anônimo";
+    let text = data.text || "";
+
+    div.innerText = user + ": " + text;
 
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
   });
-}
-
-// ÚNICO ponto de controle de autenticação
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    currentUser = user.displayName || user.email.split("@")[0];
-    entrar();
-  } else {
-    // Usuário deslogado - voltar ao login
-    document.getElementById("login").style.display = "block";
-    document.getElementById("app").style.display = "none";
-    stopMessagesListener();
-    document.getElementById("chat").innerHTML = ""; // Limpar chat
-  }
-}); 
-
-function logout() {
-  auth.signOut();
-}
-
-function send() {
-  let msg = document.getElementById("msg").value;
-
-  if (!msg.trim()) return;
-
-  db.ref("messages").push({
-    user: currentUser,
-    text: msg,
-    time: Date.now()
-  });
-
-  document.getElementById("msg").value = "";
-}
-
-// INICIAR LISTENER APENAS APÓS AUTENTICAÇÃO
-function startMessagesListener() {
-  if (messagesListener) return; // Evitar listeners duplicados
-  
-  document.getElementById("chat").innerHTML = ""; // Limpar antes de iniciar
-  
-  messagesListener = db.ref("messages").on("child_added", (snapshot) => {
-    let data = snapshot.val();
-    let chat = document.getElementById("chat");
-
-    let div = document.createElement("div");
-    div.className = "message";
-    div.innerText = data.user + ": " + data.text;
-
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-  });
-}
-
-function stopMessagesListener() {
-  if (messagesListener) {
-    db.ref("messages").off("child_added", messagesListener);
-    messagesListener = null;
-  }
-}
+} 
