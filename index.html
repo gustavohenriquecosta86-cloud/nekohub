@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NekoHub 🐾 | Global</title>
+    
     <link rel="stylesheet" href="style.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
 </head>
 <body>
 
@@ -22,15 +25,16 @@
         </div>
     </div>
 
-    <div id="app" class="app-layout" hidden>
+    <div id="app" class="app-layout" style="display: none;">
+        
         <header class="topbar">
             <div class="header-left">
                 <i class="fas fa-hashtag"></i>
-                <h2>chat-geral (Global)</h2>
+                <h2>chat-geral</h2>
             </div>
             <div class="header-right">
                 <div class="profile-chip">
-                    <img id="userAvatar" src="" class="avatar-min">
+                    <img id="userAvatar" src="" alt="Avatar" class="avatar-min">
                     <span id="userNameShort"></span>
                 </div>
                 <button id="logoutBtn" class="btn-icon"><i class="fas fa-sign-out-alt"></i></button>
@@ -46,6 +50,7 @@
                 <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </footer>
+        
     </div>
 
     <script src="script.js"></script>
