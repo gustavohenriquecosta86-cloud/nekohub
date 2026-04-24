@@ -1,73 +1,53 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NekoHub 🐾 — Chat Global</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NekoHub 🐾 | Global</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 <body>
 
-  <section id="login" class="login-screen">
-    <div class="login-card">
-      <h1 class="logo-text">NekoHub 🐾</h1>
-      <p>Acesse o chat global da comunidade</p>
-      <button id="loginBtn" class="btn-google">
-        <i class="fab fa-google"></i> Entrar com Google
-      </button>
-    </div>
-  </section>
-
-  <section id="app" class="app-layout" hidden>
-    
-    <header class="topbar">
-      <div class="header-info">
-        <h2 id="currentGroupName"># Chat Global</h2>
-        <span class="status-indicator">Online</span>
-      </div>
-      
-      <div class="user-controls">
-        <div class="profile-chip">
-          <img id="userAvatar" src="" alt="Avatar" class="avatar-min">
-          <span id="userNameShort" class="user-name">Carregando...</span>
+    <div id="login" class="login-screen">
+        <div class="login-card">
+            <h1 class="logo-text">🐾 NekoHub</h1>
+            <p>Bate-papo 2.0 (Global)</p>
+            <button id="loginBtn" class="btn-google">
+                <i class="fab fa-google"></i> Entrar com Google
+            </button>
         </div>
-        <button id="logoutBtn" title="Sair" class="btn-icon">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      </div>
-    </header>
+    </div>
 
-    <main id="chat" role="log" aria-live="polite">
-      </main>
+    <div id="app" class="app-layout" hidden>
+        <header class="topbar">
+            <div class="header-left">
+                <i class="fas fa-hashtag"></i>
+                <h2>chat-geral (Global)</h2>
+            </div>
+            <div class="header-right">
+                <div class="profile-chip">
+                    <img id="userAvatar" src="" class="avatar-min">
+                    <span id="userNameShort"></span>
+                </div>
+                <button id="logoutBtn" class="btn-icon"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </header>
 
-    <footer class="input-area">
-      <div class="input-container">
-        <input 
-          id="msg" 
-          type="text" 
-          placeholder="Escreva sua mensagem aqui..." 
-          autocomplete="off"
-        >
-        <button id="sendBtn" type="submit">
-          <i class="fas fa-paper-plane"></i>
-        </button>
-      </div>
-    </footer>
+        <main id="chat"></main>
 
-  </section>
+        <footer class="input-area">
+            <div class="input-container">
+                <button class="btn-plus"><i class="fas fa-plus-circle"></i></button>
+                <input id="msg" type="text" placeholder="Conversar em #chat-geral" autocomplete="off">
+                <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </footer>
+    </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
-  <script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
- 
