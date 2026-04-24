@@ -1,5 +1,5 @@
 /* ==========================================
-   NEKOHUB 🐾 - CSS DEFINITIVO (PC & MOBILE)
+   NEKOHUB 🐾 - AJUSTE DE POSICIONAMENTO DO CHAT
    ========================================== */
 
 :root {
@@ -7,7 +7,6 @@
     --bg-side: #2b2d31;
     --bg-input: #383a40;
     --text-main: #dbdee1;
-    --text-muted: #949ba4;
     --accent: #5865f2;
     --danger: #da373c;
 }
@@ -17,55 +16,17 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     background-color: var(--bg-dark);
-    color: var(--text-main);
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh; /* Altura dinâmica para mobile */
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
 }
 
-/* --- TELA DE LOGIN --- */
-.login-screen {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #1e1f22;
-}
-
-.login-card {
-    background: var(--bg-dark);
-    padding: 40px;
-    border-radius: 12px;
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
-}
-
-.btn-google {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 20px;
-}
-
-/* --- LAYOUT PRINCIPAL --- */
-.app-layout {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-
-/* TOPO */
+/* --- TOPO (BOTÃO SAIR PERFEITO) --- */
 .topbar {
     height: 50px;
     background: var(--bg-side);
@@ -76,66 +37,50 @@ body {
     flex-shrink: 0;
 }
 
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.avatar-min {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-}
-
 .btn-icon {
     background: var(--danger);
-    border: none;
     color: white;
+    border: none;
     padding: 5px 10px;
     border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
 }
 
-/* --- ÁREA DO CHAT --- */
+/* --- O LUGAR DO CHAT (AJUSTADO) --- */
 #chat {
     flex: 1;
     overflow-y: auto;
-    padding: 20px 0;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 900px; /* Limite de largura para o PC */
-    margin: 0 auto;   /* Centraliza no PC */
+    /* MÁGICA AQUI: Empurra as mensagens para baixo */
+    justify-content: flex-end; 
+    
+    /* DISTÂNCIA DA PQP: Ajuste esse valor para subir/descer o bloco todo */
+    padding-bottom: 15px; 
 }
 
 .message {
-    padding: 8px 16px;
-    transition: 0.1s;
+    padding: 6px 16px;
+    width: 100%;
 }
 
-.message:hover { background: #2e3035; }
+.msg-user { font-weight: 600; color: #fff; display: block; font-size: 0.9rem; }
+.msg-text { color: var(--text-main); font-size: 0.95rem; }
 
-.msg-user {
-    display: block;
-    font-weight: 600;
-    color: #fff;
-    font-size: 0.95rem;
-}
-
-.msg-text {
-    font-size: 0.95rem;
-    color: var(--text-main);
-}
-
-/* --- BARRA DE MENSAGEM (O CORAÇÃO DO PROBLEMA) --- */
+/* --- BARRA DE MENSAGEM --- */
 .input-area {
     width: 100%;
     background: var(--bg-dark);
     display: flex;
     justify-content: center;
-    padding: 10px 16px 30px 16px; /* Padding bottom alto para flutuar no celular */
+    /* Altura da barra em relação ao chão do celular */
+    padding: 5px 16px 25px 16px; 
+    flex-shrink: 0;
 }
 
 .input-container {
@@ -145,7 +90,7 @@ body {
     align-items: center;
     padding: 0 12px;
     width: 100%;
-    max-width: 850px; /* Impede de ficar gigante no PC */
+    max-width: 850px;
     min-height: 44px;
 }
 
@@ -162,28 +107,12 @@ body {
     background: transparent;
     border: none;
     color: var(--accent);
-    font-size: 1.2rem;
     cursor: pointer;
 }
 
-/* --- AJUSTES DE PC --- */
-@media (min-width: 1024px) {
-    .topbar {
-        padding: 0 15%; /* Centraliza o topo no PC */
-    }
-    
-    .input-area {
-        padding: 20px 0 40px 0; /* Mais espaço no PC */
-    }
+/* --- RESPONSIVIDADE PC --- */
+@media (min-width: 768px) {
+    .topbar { padding: 0 20%; }
+    .input-area { padding-bottom: 20px; }
 }
-
-/* --- AJUSTES DE CELULAR --- */
-@media (max-width: 768px) {
-    #chat {
-        max-width: 100%; /* No celular usa a tela toda */
-    }
-    
-    .input-area {
-        padding: 10px 10px 25px 10px; /* Ajuste fino para a altura do dedo */
-    }
-}
+ 
