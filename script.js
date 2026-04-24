@@ -1,123 +1,240 @@
-// CONFIGURAÇÃO
+/**
+ * ============================================================================
+ * NEKOHUB 🐾 - CORE ENGINE 3.0 (OPTIMIZED)
+ * ============================================================================
+ */
+
+// =========================
+// FIREBASE INIT
+// =========================
 const firebaseConfig = {
-  apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
-  authDomain: "nekohub-3dd91.firebaseapp.com",
-  projectId: "nekohub-3dd91",
-  storageBucket: "nekohub-3dd91.firebasestorage.app",
-  messagingSenderId: "606476027160",
-  appId: "1:606476027160:web:ed34a10668f358d89dca6d"
+    apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
+    authDomain: "nekohub-3dd91.firebaseapp.com",
+    projectId: "nekohub-3dd91",
+    storageBucket: "nekohub-3dd91.firebasestorage.app",
+    messagingSenderId: "606476027160",
+    appId: "1:606476027160:web:ed34a10668f358d89dca6d"
 };
 
-// Inicialização
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
 const auth = firebase.auth();
 const db = firebase.database();
 
-// --- FUNÇÕES DE AUTH ---
+// =========================
+// DOM CACHE (performance)
+// =========================
+const DOM = {
+    login: null,
+    app: null,
+    chat: null,
+    msg: null,
+    userName: null,
+    userAvatar: null,
+    title: null
+};
+
+// =========================
+// STATE
+// =========================
+const State = {
+    channel: "geral",
+    user: null,
+    listener: null,
+    ref: null,
+    lastScrollAtBottom: true
+};
+
+// =========================
+// INIT DOM
+// =========================
+function initDOM() {
+    DOM.login = document.getElementById("login");
+    DOM.app = document.getElementById("app");
+    DOM.chat = document.getElementById("chat");
+    DOM.msg = document.getElementById("msg");
+    DOM.userName = document.getElementById("userNameShort");
+    DOM.userAvatar = document.getElementById("userAvatar");
+    DOM.title = document.getElementById("currentGroupName");
+}
+
+// =========================
+// AUTH
+// =========================
 const loginGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(err => console.error("Erro Login:", err));
+    auth.signInWithPopup(provider);
 };
 
 const logout = () => auth.signOut();
 
-// --- VIGIA DE ESTADO ---
 auth.onAuthStateChanged((user) => {
-  const loginSection = document.getElementById("login");
-  const appSection = document.getElementById("app");
-  const welcomeText = document.getElementById("welcome");
+    State.user = user;
 
-  if (user) {
-    console.log("Usuário logado:", user.displayName);
-    loginSection.hidden = true;
-    appSection.hidden = false;
-    welcomeText.innerText = `Olá, ${user.displayName.split(' ')[0]} 👋`;
-    startChat();
-  } else {
-    loginSection.hidden = false;
-    appSection.hidden = true;
-  }
+    if (user) {
+        DOM.login.hidden = true;
+        DOM.app.hidden = false;
+
+        DOM.userName.innerText = user.displayName?.split(" ")[0] || "User";
+        DOM.userAvatar.src = user.photoURL || "https://via.placeholder.com/32";
+
+        setupChannels();
+        startChannel();
+    } else {
+        DOM.login.hidden = false;
+        DOM.app.hidden = true;
+        stopChannel();
+    }
 });
 
-// --- ENVIAR MENSAGEM (VERSÃO BLINDADA) ---
-function send() {
-  const input = document.getElementById("msg");
-  const text = input.value.trim();
-  const user = auth.currentUser; // Pega o usuário direto do Firebase, sem erro de variável global
+// =========================
+// CHANNELS
+// =========================
+function setupChannels() {
+    const list = document.getElementById("groupsList");
 
-  if (!text) return; // Se não tem texto, não faz nada
-  
-  if (!user) {
-    console.error("Erro: Nenhum usuário autenticado encontrado!");
-    return;
-  }
+    db.ref("channels").on("value", (snap) => {
+        list.innerHTML = "";
 
-  console.log("Tentando enviar:", text);
+        renderChannel("geral", "geral");
 
-  db.ref("messages").push({
-    user: user.displayName,
-    uid: user.uid, // Guardamos o ID único por segurança
-    text: text,
-    time: Date.now()
-  })
-  .then(() => {
-    console.log("Mensagem enviada com sucesso!");
-    input.value = "";
-    input.focus();
-  })
-  .catch((error) => {
-    console.error("Erro ao gravar no Firebase:", error);
-    alert("Erro ao enviar! Verifique o console.");
-  });
-}
-
-// --- ESCUTAR MENSAGENS ---
-function startChat() {
-  const chat = document.getElementById("chat");
-  
-  db.ref("messages").off(); // Limpa escutas antigas
-  db.ref("messages").limitToLast(30).on("child_added", (snapshot) => {
-    const data = snapshot.val();
-    const div = document.createElement("div");
-    
-    // Identifica se a mensagem é minha usando o UID (mais seguro que o nome)
-    const isMe = data.uid === auth.currentUser?.uid;
-    div.className = `message ${isMe ? 'sent' : 'received'}`;
-
-    div.innerHTML = `
-      <small style="display:block; font-size:10px; opacity:0.6">${data.user}</small>
-      <span>${data.text}</span>
-    `;
-
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-  });
-}
-
-// --- LIGAÇÃO DOS EVENTOS (SEM ERRO DE CARREGAMENTO) ---
-// Usamos uma função que roda assim que o script carrega para garantir os cliques
-function setupEventListeners() {
-    const btnSend = document.getElementById("sendBtn");
-    const btnLogin = document.getElementById("loginBtn");
-    const btnLogout = document.getElementById("logoutBtn");
-    const inputMsg = document.getElementById("msg");
-
-    if (btnSend) btnSend.onclick = send;
-    if (btnLogin) btnLogin.onclick = loginGoogle;
-    if (btnLogout) btnLogout.onclick = logout;
-    
-    if (inputMsg) {
-        inputMsg.onkeydown = (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault(); // Evita quebra de linha
-                send();
+        snap.forEach(child => {
+            if (child.key !== "geral") {
+                renderChannel(child.key, child.val().name);
             }
-        };
+        });
+    });
+}
+
+function renderChannel(id, name) {
+    const list = document.getElementById("groupsList");
+
+    const el = document.createElement("div");
+    el.className = `group-item ${State.channel === id ? "active" : ""}`;
+    el.dataset.id = id;
+    el.innerHTML = `<i class="fas fa-hashtag"></i> <span>${name}</span>`;
+
+    el.onclick = () => switchChannel(id, name);
+
+    list.appendChild(el);
+}
+
+function switchChannel(id, name) {
+    if (State.channel === id) return;
+
+    stopChannel(); // sempre primeiro
+
+    State.channel = id;
+
+    DOM.title.innerText = `# ${name}`;
+    DOM.msg.placeholder = `Conversar em #${name}`;
+
+    document.querySelectorAll(".group-item").forEach(el => {
+        el.classList.toggle("active", el.dataset.id === id);
+    });
+
+    startChannel();
+}
+
+// =========================
+// CHAT ENGINE
+// =========================
+function send() {
+    const text = DOM.msg.value.trim();
+    const user = State.user;
+
+    if (!text || !user) return;
+
+    db.ref(`messages/${State.channel}`).push({
+        uid: user.uid,
+        user: user.displayName,
+        text: text,
+        time: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    DOM.msg.value = "";
+    DOM.msg.focus();
+}
+
+function startChannel() {
+    if (!DOM.chat) return;
+
+    DOM.chat.innerHTML = "";
+
+    State.ref = db.ref(`messages/${State.channel}`).limitToLast(50);
+
+    State.listener = State.ref.on("child_added", (snap) => {
+        renderMessage(snap.val());
+    });
+}
+
+function stopChannel() {
+    if (State.ref && State.listener) {
+        State.ref.off("child_added", State.listener);
+        State.ref = null;
+        State.listener = null;
     }
 }
 
-// Inicia os ouvintes de clique
-setupEventListeners();
- 
+// =========================
+// RENDER MESSAGE
+// =========================
+function renderMessage(data) {
+    const isMe = data.uid === State.user?.uid;
+
+    const div = document.createElement("div");
+    div.className = `message ${isMe ? "sent" : "received"}`;
+
+    div.innerHTML = `
+        ${!isMe ? `<small>${escape(data.user)}</small>` : ""}
+        <div class="msg-content">${escape(data.text)}</div>
+    `;
+
+    const shouldAutoScroll =
+        DOM.chat.scrollTop + DOM.chat.clientHeight >= DOM.chat.scrollHeight - 80;
+
+    DOM.chat.appendChild(div);
+
+    if (shouldAutoScroll) {
+        requestAnimationFrame(() => {
+            DOM.chat.scrollTop = DOM.chat.scrollHeight;
+        });
+    }
+}
+
+// =========================
+// SECURITY
+// =========================
+function escape(text) {
+    return String(text).replace(/[&<>"']/g, m => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    }[m]));
+}
+
+// =========================
+// EVENTS
+// =========================
+function initEvents() {
+    document.getElementById("loginBtn").onclick = loginGoogle;
+    document.getElementById("logoutBtn").onclick = logout;
+    document.getElementById("sendBtn").onclick = send;
+
+    DOM.msg.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            send();
+        }
+    });
+}
+
+// =========================
+// BOOT
+// =========================
+document.addEventListener("DOMContentLoaded", () => {
+    initDOM();
+    initEvents();
+}); 
