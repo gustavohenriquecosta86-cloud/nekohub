@@ -8,44 +8,45 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
 const db = firebase.database();
 
 let currentUser = "";
 
-// LOGIN
+// --- LOGIN ---
 function loginGoogle() {
   const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider).catch(err => console.log(err));
+  auth.signInWithPopup(provider).catch(err => console.error("Erro ao logar:", err));
 }
 
-// CONTROLE DE LOGIN
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    currentUser = user.displayName || user.email.split("@")[0];
-
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
-    document.getElementById("welcome").innerText =
-      "Olá, " + currentUser + " 👋";
-
-    startChat();
-  } else {
-    document.getElementById("login").style.display = "block";
-    document.getElementById("app").style.display = "none";
-  }
-});
-
-// LOGOUT
 function logout() {
   auth.signOut();
 }
 
-// ENVIAR MENSAGEM
+// --- CONTROLE DE INTERFACE (VIGIA) ---
+auth.onAuthStateChanged((user) => {
+  const loginSection = document.getElementById("login");
+  const appSection = document.getElementById("app");
+
+  if (user) {
+    currentUser = user.displayName || user.email.split("@")[0];
+    
+    // Ajuste para o HTML novo (usando o atributo hidden)
+    loginSection.hidden = true;
+    appSection.hidden = false;
+
+    document.getElementById("welcome").innerText = "Olá, " + currentUser + " 👋";
+    startChat();
+  } else {
+    loginSection.hidden = false;
+    appSection.hidden = true;
+  }
+});
+
+// --- ENVIAR MENSAGEM ---
 function send() {
-  let msg = document.getElementById("msg").value;
+  const input = document.getElementById("msg");
+  const msg = input.value;
 
   if (!msg.trim() || !currentUser) return;
 
@@ -55,29 +56,42 @@ function send() {
     time: Date.now()
   });
 
-  document.getElementById("msg").value = "";
+  input.value = "";
+  input.focus(); // Mantém o foco no campo após enviar
 }
 
-// INICIAR CHAT
+// --- INICIAR CHAT ---
 function startChat() {
   const chat = document.getElementById("chat");
   chat.innerHTML = "";
 
   db.ref("messages").off();
-
   db.ref("messages").on("child_added", (snapshot) => {
     let data = snapshot.val();
-
     let div = document.createElement("div");
-    div.className = "message";
+    
+    // Define se a mensagem é minha ou de outro (para o CSS novo)
+    const isMe = data.user === currentUser;
+    div.className = `message ${isMe ? 'sent' : 'received'}`;
 
-    // 🔥 proteção contra bug de nome vazio
-    let user = data.user || "Anônimo";
-    let text = data.text || "";
-
-    div.innerText = user + ": " + text;
+    div.innerHTML = `
+      <small>${data.user}</small>
+      <p>${data.text}</p>
+    `;
 
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
   });
-} 
+}
+
+// --- LIGAÇÃO DOS BOTÕES (O QUE ESTAVA FALTANDO!) ---
+// Como o HTML não tem mais 'onclick', precisamos ligar aqui:
+document.addEventListener("DOMContentLoaded", () => {
+  const sendBtn = document.getElementById("sendBtn");
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (sendBtn) sendBtn.addEventListener("click", send);
+  if (loginBtn) loginBtn.addEventListener("click", loginGoogle);
+  if (logoutBtn) logoutBtn.addEventListener("click", logout);
+});
