@@ -1,5 +1,5 @@
 /* ==========================================
-   NEKOHUB 🐾 - AJUSTE DE POSICIONAMENTO DO CHAT
+   NEKOHUB 🐾 - ESTRUTURA REFORMULADA (FORÇA BRUTA)
    ========================================== */
 
 :root {
@@ -15,18 +15,20 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
 }
 
+/* O Segredo: Body fixo sem rolagem externa */
 body {
     background-color: var(--bg-dark);
-    height: 100dvh; /* Altura dinâmica para mobile */
+    height: 100vh;
+    height: 100dvh; 
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-/* --- TOPO (BOTÃO SAIR PERFEITO) --- */
+/* TOPO FIXO */
 .topbar {
     height: 50px;
     background: var(--bg-side);
@@ -37,49 +39,40 @@ body {
     flex-shrink: 0;
 }
 
-.btn-icon {
-    background: var(--danger);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-/* --- O LUGAR DO CHAT (AJUSTADO) --- */
+/* ÁREA DO CHAT: Agora com margem automática para fixar embaixo */
 #chat {
     flex: 1;
     overflow-y: auto;
     width: 100%;
-    max-width: 900px;
+    max-width: 800px;
     margin: 0 auto;
+    padding: 10px 0;
     
     display: flex;
     flex-direction: column;
-    /* MÁGICA AQUI: Empurra as mensagens para baixo */
-    justify-content: flex-end; 
-    
-    /* DISTÂNCIA DA PQP: Ajuste esse valor para subir/descer o bloco todo */
-    padding-bottom: 15px; 
+}
+
+/* Espaçador que empurra as mensagens para baixo */
+#chat::before {
+    content: "";
+    flex: 1;
 }
 
 .message {
-    padding: 6px 16px;
+    padding: 4px 16px;
     width: 100%;
 }
 
 .msg-user { font-weight: 600; color: #fff; display: block; font-size: 0.9rem; }
 .msg-text { color: var(--text-main); font-size: 0.95rem; }
 
-/* --- BARRA DE MENSAGEM --- */
+/* ÁREA DE DIGITAR: Centralizada e com respiro real */
 .input-area {
     width: 100%;
+    padding: 15px 16px 35px 16px; /* Aumentei o 35px para tirar da 'beirada' do celular */
     background: var(--bg-dark);
     display: flex;
     justify-content: center;
-    /* Altura da barra em relação ao chão do celular */
-    padding: 5px 16px 25px 16px; 
     flex-shrink: 0;
 }
 
@@ -90,7 +83,7 @@ body {
     align-items: center;
     padding: 0 12px;
     width: 100%;
-    max-width: 850px;
+    max-width: 750px; /* No PC não fica gigante */
     min-height: 44px;
 }
 
@@ -107,12 +100,24 @@ body {
     background: transparent;
     border: none;
     color: var(--accent);
+    font-size: 1.2rem;
     cursor: pointer;
 }
 
-/* --- RESPONSIVIDADE PC --- */
+/* BOTÃO SAIR */
+.btn-icon {
+    background: var(--danger);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* AJUSTE PC */
 @media (min-width: 768px) {
-    .topbar { padding: 0 20%; }
-    .input-area { padding-bottom: 20px; }
+    .topbar { padding: 0 15%; }
+    .input-area { padding-bottom: 20px; } /* No PC não precisa de tanto espaço embaixo */
 }
  
