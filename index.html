@@ -1,81 +1,29 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NekoHub 🐾 — Sua Comunidade em Tempo Real</title>
-
-  <meta name="description" content="NekoHub - Um chat moderno, rápido e escalável para comunidades.">
-  <meta name="theme-color" content="#0d0d0d">
-
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-  <link rel="preconnect" href="https://www.gstatic.com">
-</head>
-<body>
-
-  <section id="login" class="container" aria-labelledby="loginTitle">
+<section id="login" class="container">
     <div class="login-card">
-      <h1 id="loginTitle" class="logo-text">NekoHub 🐾</h1>
-      <p>Bem-vindo de volta! Conecte-se para começar.</p>
-      
-      <button id="loginBtn" type="button" class="btn-primary" aria-label="Entrar usando sua conta do Google">
-        <i class="fab fa-google" aria-hidden="true"></i>
-        <span>Entrar com Google</span>
-      </button>
+        <h1 class="logo-text">NekoHub 🐾</h1>
+        <button id="loginBtn" class="btn-primary">Entrar com Google</button>
     </div>
-  </section>
+</section>
 
-  <section id="app" class="app-layout" hidden>
-    
-    <main class="chat-container">
-      
-      <header class="topbar">
+<section id="app" class="app-layout" hidden>
+    <header class="topbar">
         <div class="chat-meta">
-          <h1 class="logo-header">NekoHub 🐾</h1>
-          <h2 id="currentGroupName">Chat Global</h2>
+            <h2>NekoHub 🐾</h2>
+            <span class="chat-description">Chat Global</span>
         </div>
-        
-        <div class="topbar-actions">
-          <div class="user-info">
-            <img id="userAvatar" src="" alt="Sua foto de perfil" class="avatar-small">
-            <span id="userName" class="user-name">Usuário</span>
-          </div>
-          <button id="logoutBtn" type="button" class="btn-logout" aria-label="Sair da conta" title="Sair">
-            <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-          </button>
+        <div class="user-info">
+            <img id="userAvatar" src="" class="avatar-min">
+            <button id="logoutBtn" class="btn-logout"><i class="fas fa-sign-out-alt"></i></button>
         </div>
-      </header>
+    </header>
 
-      <article id="chat" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions text">
-      </article>
+    <main id="chat"></main>
 
-      <footer class="chat-input-area">
+    <footer class="chat-input-area">
         <div class="input-wrapper">
-          <input 
-            id="msg" 
-            type="text" 
-            placeholder="Digite sua mensagem..." 
-            autocomplete="off"
-            enterkeyhint="send"
-            aria-label="Escrever mensagem"
-          >
-          <button id="sendBtn" type="button" aria-label="Enviar mensagem" title="Enviar">
-            <i class="fas fa-paper-plane" aria-hidden="true"></i>
-          </button>
+            <input id="msg" type="text" placeholder="Digite sua mensagem..." autocomplete="off">
+            <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
         </div>
-      </footer>
-    </main>
-
-  </section>
-
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
-  <script src="script.js"></script>
-
-</body>
-</html>
+    </footer>
+</section>
  
