@@ -50,14 +50,6 @@ auth.onAuthStateChanged((user) => {
 // 4. LOGICA DO CHAT
 function startChat() {
     const chatDiv = document.getElementById("chat");
-    
-    // Remove qualquer escuta antiga para não duplicar mensagens
-    db.ref(State.dbPath).off();
-
-    // Escuta as últimas 50 mensagens
-    db.ref(State.dbPath).limitToLast(50).on("child_added", (snapshot) => {
-        renderMessage(snapshot.val());
-    });
 }
 
 // FUNÇÃO DE ENVIAR (Onde estava dando erro)
