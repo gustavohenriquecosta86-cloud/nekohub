@@ -1,10 +1,10 @@
 /**
  * ============================================================================
- * NEKOHUB 🐾 - GLOBAL CHAT ENGINE v5.0
- * Foco: Simplicidade, Estabilidade e Chat Único
+ * NEKOHUB 🐾 - SCRIPT CORE v5.1 (GLOBAL CHAT ONLY)
  * ============================================================================
  */
 
+// 1. CONFIGURAÇÃO (Mantendo seus dados originais)
 const firebaseConfig = {
     apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
     authDomain: "nekohub-3dd91.firebaseapp.com",
@@ -14,19 +14,18 @@ const firebaseConfig = {
     appId: "1:606476027160:web:ed34a10668f358d89dca6d"
 };
 
+// Inicializa Firebase
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-
 const auth = firebase.auth();
 const db = firebase.database();
 
-// 1. ESTADO SIMPLIFICADO (Apenas o necessário)
+// 2. ESTADO DO APP
 const State = {
     user: null,
-    dbPath: "global_messages", // Caminho único para todas as mensagens
-    isSending: false
+    dbPath: "global_messages" // Caminho único no Firebase para não dar erro
 };
 
-// 2. AUTENTICAÇÃO
+// 3. MONITOR DE AUTENTICAÇÃO
 auth.onAuthStateChanged((user) => {
     const loginSection = document.getElementById("login");
     const appSection = document.getElementById("app");
@@ -36,56 +35,57 @@ auth.onAuthStateChanged((user) => {
         loginSection.hidden = true;
         appSection.hidden = false;
         
-        // UI do Perfil
+        // Atualiza UI do Perfil
         document.getElementById("userNameShort").innerText = user.displayName?.split(" ")[0] || "User";
         document.getElementById("userAvatar").src = user.photoURL || "https://via.placeholder.com/32";
 
-        startChat();
+        startChat(); // Começa a ouvir as mensagens
     } else {
+        State.user = null;
         loginSection.hidden = false;
         appSection.hidden = true;
     }
 });
 
-// 3. ENGINE DO CHAT (O FIX PARA O ERRO DE ENVIO)
+// 4. LOGICA DO CHAT
 function startChat() {
     const chatDiv = document.getElementById("chat");
-    chatDiv.innerHTML = ""; // Limpa lixo visual
+    
+    // Remove qualquer escuta antiga para não duplicar mensagens
+    db.ref(State.dbPath).off();
 
-    // Escuta as mensagens no nó global
+    // Escuta as últimas 50 mensagens
     db.ref(State.dbPath).limitToLast(50).on("child_added", (snapshot) => {
-        const data = snapshot.val();
-        renderMessage(data);
+        renderMessage(snapshot.val());
     });
 }
 
-function send() {
+// FUNÇÃO DE ENVIAR (Onde estava dando erro)
+function sendMessage() {
     const input = document.getElementById("msg");
     const text = input.value.trim();
 
-    // Validações básicas para evitar erros
-    if (!text || !State.user || State.isSending) return;
+    // Se não tiver texto ou usuário não estiver logado, para aqui
+    if (!text || !State.user) return;
 
-    State.isSending = true;
-
-    // Envio direto para o nó GLOBAL
+    // Envia para o Firebase
     db.ref(State.dbPath).push({
         uid: State.user.uid,
         user: State.user.displayName || "Anônimo",
         text: text,
         time: firebase.database.ServerValue.TIMESTAMP
-    }).then(() => {
-        input.value = "";
-        input.focus();
-    }).catch(err => {
-        console.error("Erro ao enviar:", err);
-        alert("Erro ao enviar mensagem!");
-    }).finally(() => {
-        State.isSending = false;
+    })
+    .then(() => {
+        input.value = ""; // Limpa o campo
+        input.focus();    // Devolve o foco para o teclado
+    })
+    .catch((error) => {
+        console.error("Erro ao enviar:", error);
+        alert("Erro ao enviar! Verifique sua conexão.");
     });
 }
 
-// 4. RENDERIZAÇÃO (Focada na sua nova UI)
+// 5. RENDERIZAÇÃO NA TELA
 function renderMessage(data) {
     const chat = document.getElementById("chat");
     const isMe = data.uid === State.user?.uid;
@@ -93,30 +93,38 @@ function renderMessage(data) {
     const div = document.createElement("div");
     div.className = `message ${isMe ? "sent" : "received"}`;
 
-    // Escapa HTML para segurança
-    const cleanText = data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    // Proteção contra XSS (Script injetado)
+    const safeText = data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     div.innerHTML = `
         ${!isMe ? `<small class="message-author">${data.user}</small>` : ""}
-        <div class="msg-content">${cleanText}</div>
+        <div class="msg-content">${safeText}</div>
     `;
 
     chat.appendChild(div);
+    
+    // Auto-scroll para a última mensagem
     chat.scrollTop = chat.scrollHeight;
 }
 
-// 5. INICIALIZAÇÃO E EVENTOS
+// 6. EVENTOS (Botões e Teclado)
 document.getElementById("loginBtn").onclick = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider);
 };
 
 document.getElementById("logoutBtn").onclick = () => auth.signOut();
-document.getElementById("sendBtn").onclick = send;
 
-document.getElementById("msg").addEventListener("keydown", (e) => {
+document.getElementById("sendBtn").onclick = (e) => {
+    e.preventDefault();
+    sendMessage();
+};
+
+// Enviar ao apertar ENTER
+document.getElementById("msg").onkeydown = (e) => {
     if (e.key === "Enter") {
         e.preventDefault();
-        send();
+        sendMessage();
     }
-});
+};
+ 
