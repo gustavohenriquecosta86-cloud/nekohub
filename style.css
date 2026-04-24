@@ -1,283 +1,154 @@
 /**
  * ============================================================================
- * NEKOHUB 🐾 - ULTRA SUPREME EDITION v6.0
- * Foco: Design de Interface Profissional, Fluidez e Organização Total.
+ * NEKOHUB 🐾 - CORE SCRIPT v6.0 (SUPREME GLOBAL)
+ * Integrado com Firebase Realtime Database
  * ============================================================================
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+// 1. CONFIGURAÇÃO FIREBASE
+const firebaseConfig = {
+    apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
+    authDomain: "nekohub-3dd91.firebaseapp.com",
+    projectId: "nekohub-3dd91",
+    storageBucket: "nekohub-3dd91.firebasestorage.app",
+    messagingSenderId: "606476027160",
+    appId: "1:606476027160:web:ed34a10668f358d89dca6d"
+};
 
-:root {
-  /* Paleta de Cores Deep Dark */
-  --bg-deep: #050505;
-  --bg-panel: #111214;
-  --bg-item: #1e1f22;
-  
-  /* Brand Colors */
-  --accent: #5865f2;
-  --accent-glow: rgba(88, 101, 242, 0.3);
-  --success: #23a55a;
-  --danger: #f23f42;
-  
-  /* Text & Borders */
-  --text-bright: #ffffff;
-  --text-normal: #dbdee1;
-  --text-muted: #949ba4;
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  
-  /* Shadows & Glass */
-  --shadow-ui: 0 4px 15px rgba(0, 0, 0, 0.6);
-  --glass: rgba(17, 18, 20, 0.8);
+// Inicialização segura
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
 }
 
-/* 1. CONFIGURAÇÕES GLOBAIS */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+const auth = firebase.auth();
+const db = firebase.database();
+
+// 2. ESTADO DO APLICATIVO
+const State = {
+    user: null,
+    dbPath: "global_messages",
+    isSending: false
+};
+
+// 3. CONTROLE DE AUTENTICAÇÃO
+auth.onAuthStateChanged((user) => {
+    const loginScreen = document.getElementById("login");
+    const appLayout = document.getElementById("app");
+
+    if (user) {
+        State.user = user;
+        loginScreen.hidden = true;
+        appLayout.hidden = false;
+        
+        // Atualiza elementos da UI Supreme
+        document.getElementById("userNameShort").innerText = user.displayName?.split(" ")[0] || "Explorador";
+        document.getElementById("userAvatar").src = user.photoURL || "https://ui-avatars.com/api/?name=" + user.displayName;
+
+        initChat(); 
+    } else {
+        State.user = null;
+        loginScreen.hidden = false;
+        appLayout.hidden = true;
+    }
+});
+
+// 4. MOTOR DO CHAT
+function initChat() {
+    const chatContainer = document.getElementById("chat");
+    
+    // Limpa ouvintes antigos para evitar bugs de memória
+    db.ref(State.dbPath).off();
+
+    // Escuta novas mensagens (limitado às últimas 100 para performance)
+    db.ref(State.dbPath).limitToLast(100).on("child_added", (snapshot) => {
+        const messageData = snapshot.val();
+        renderMessage(messageData);
+    });
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-deep);
-  color: var(--text-normal);
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  overflow: hidden;
-  line-height: 1.4;
+// FUNÇÃO DE ENVIO REFEITA (SEM ERROS)
+function sendMessage() {
+    const input = document.getElementById("msg");
+    const messageText = input.value.trim();
+
+    // Bloqueia se vazio, se não houver usuário ou se já estiver enviando
+    if (!messageText || !State.user || State.isSending) return;
+
+    State.isSending = true;
+
+    const newMessage = {
+        uid: State.user.uid,
+        user: State.user.displayName || "Usuário Anônimo",
+        text: messageText,
+        time: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    db.ref(State.dbPath).push(newMessage)
+        .then(() => {
+            input.value = ""; // Limpa campo
+            input.focus();    // Mantém o teclado aberto no mobile
+        })
+        .catch((err) => {
+            console.error("Erro NekoHub:", err);
+            alert("Erro ao enviar. Tente novamente!");
+        })
+        .finally(() => {
+            State.isSending = false;
+        });
 }
 
-/* 2. LAYOUT DO APP (ESTRUTURA DE FERRO) */
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  max-width: 1200px; /* Maior amplitude para telas grandes */
-  margin: 0 auto;
-  background-color: var(--bg-panel);
-  position: relative;
-  box-shadow: var(--shadow-ui);
+// 5. RENDERIZAÇÃO DE MENSAGENS (ESTILO SUPREME)
+function renderMessage(data) {
+    const chat = document.getElementById("chat");
+    const isMe = data.uid === State.user?.uid;
+
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${isMe ? "sent" : "received"}`;
+
+    // Sanitização básica para evitar scripts maliciosos
+    const cleanText = data.text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    messageDiv.innerHTML = `
+        ${!isMe ? `<span class="message-author">${data.user}</span>` : ""}
+        <div class="msg-content">
+            ${cleanText}
+        </div>
+    `;
+
+    chat.appendChild(messageDiv);
+    
+    // Scroll Suave para a última mensagem
+    chat.scrollTo({
+        top: chat.scrollHeight,
+        behavior: 'smooth'
+    });
 }
 
-/* 3. HEADER (BARRA DE TOPO) */
-.topbar {
-  height: 64px;
-  min-height: 64px;
-  padding: 0 20px;
-  background: var(--glass);
-  backdrop-filter: blur(10px); /* Efeito Vidro */
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 100;
-}
+// 6. LISTENERS DE EVENTOS
+// Login Google
+document.getElementById("loginBtn").addEventListener("click", () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider);
+});
 
-.header-info h2 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: -0.2px;
-  color: var(--text-bright);
-}
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    if(confirm("Deseja mesmo sair do NekoHub?")) {
+        auth.signOut();
+    }
+});
 
-.status-indicator {
-  font-size: 0.75rem;
-  color: var(--success);
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
+// Botão Enviar
+document.getElementById("sendBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    sendMessage();
+});
 
-.status-indicator::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: var(--success);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--success);
-}
-
-.profile-chip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--bg-item);
-  padding: 5px 12px 5px 6px;
-  border-radius: 20px;
-  border: 1px solid var(--border-subtle);
-}
-
-.avatar-min {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* 4. CHAT AREA (FLUXO PERFEITO) */
-#chat {
-  flex: 1;
-  overflow-y: overlay; /* Scroll sutil */
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: radial-gradient(circle at top, #16171a 0%, #111214 100%);
-}
-
-/* Custom Scrollbar */
-#chat::-webkit-scrollbar { width: 6px; }
-#chat::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
-  border-radius: 10px;
-}
-
-/* MENSAGENS (ESTILO BOLHA MODERNA) */
-.message {
-  max-width: 75%;
-  position: relative;
-  animation: msgPop 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-}
-
-@keyframes msgPop {
-  from { opacity: 0; transform: scale(0.9) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.msg-content {
-  padding: 12px 16px;
-  border-radius: 18px;
-  font-size: 0.95rem;
-  word-wrap: break-word;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.message.sent {
-  align-self: flex-end;
-}
-.message.sent .msg-content {
-  background: var(--accent);
-  color: #fff;
-  border-bottom-right-radius: 4px;
-}
-
-.message.received {
-  align-self: flex-start;
-}
-.message.received .msg-content {
-  background: var(--bg-item);
-  color: var(--text-normal);
-  border: 1px solid var(--border-subtle);
-  border-bottom-left-radius: 4px;
-}
-
-.message-author {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--accent);
-  margin-left: 12px;
-  margin-bottom: 4px;
-  display: block;
-}
-
-/* 5. INPUT AREA (A "PÍLULA" FLUTUANTE) */
-.input-area {
-  padding: 20px 24px;
-  background: transparent;
-}
-
-.input-container {
-  display: flex;
-  align-items: center;
-  background: var(--bg-item);
-  padding: 8px 16px;
-  border-radius: 28px;
-  border: 1px solid var(--border-subtle);
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-ui);
-}
-
-.input-container:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 15px var(--accent-glow);
-}
-
-#msg {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--text-bright);
-  padding: 10px;
-  font-size: 1rem;
-  outline: none;
-}
-
-#sendBtn {
-  background: var(--accent);
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#sendBtn:hover {
-  transform: scale(1.1) rotate(-10deg);
-  background: #4752c4;
-}
-
-/* 6. TELA DE LOGIN (O CARTÃO DE VISITA) */
-.login-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--bg-deep);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.login-card {
-  background: var(--bg-panel);
-  padding: 40px;
-  border-radius: 24px;
-  text-align: center;
-  border: 1px solid var(--border-subtle);
-  width: 90%;
-  max-width: 400px;
-}
-
-.logo-text {
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #5865f2 0%, #79c0ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 10px;
-}
-
-/* RESPONSIVIDADE MOBILE (SOLUÇÃO FINAL) */
-@media (max-width: 768px) {
-  .app-layout {
-    max-width: 100%;
-    height: 100vh;
-  }
-  
-  .message { max-width: 85%; }
-  
-  .input-area {
-    padding: 10px 15px 25px 15px; /* Mais espaço embaixo para gestos do celular */
-  }
-
-  .topbar { padding: 0 15px; }
-}
-
-[hidden] { display: none !important; }
+// Enviar com a tecla Enter
+document.getElementById("msg").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+ 
