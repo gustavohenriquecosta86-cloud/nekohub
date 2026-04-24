@@ -4,20 +4,25 @@
  * ============================================================================
  */
 
-// 1. CONFIGURAÇÃO (Mantendo seus dados originais)
+// 1. CONFIGURAÇÃO FIREBASE (AGORA COM ENDEREÇO!)
 const firebaseConfig = {
-    apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
-    authDomain: "nekohub-3dd91.firebaseapp.com",
-    projectId: "nekohub-3dd91",
-    storageBucket: "nekohub-3dd91.firebasestorage.app",
-    messagingSenderId: "606476027160",
-    appId: "1:606476027160:web:ed34a10668f358d89dca6d"
+  apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
+  authDomain: "nekohub-3dd91.firebaseapp.com",
+  databaseURL: "https://nekohub-3dd91-default-rtdb.firebaseio.com", // O ENDEREÇO QUE FALTAVA!
+  projectId: "nekohub-3dd91",
+  storageBucket: "nekohub-3dd91.firebasestorage.app",
+  messagingSenderId: "606476027160",
+  appId: "1:606476027160:web:ed34a10668f358d89dca6d"
 };
 
-// Inicializa Firebase
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+// Inicialização segura
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
 const auth = firebase.auth();
-const db = firebase.database();
+const db = firebase.database(); // Agora o 'db' sabe para onde ir!
+ 
 
 // 2. ESTADO DO APP
 const State = {
