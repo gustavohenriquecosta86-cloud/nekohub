@@ -1,52 +1,225 @@
+/* ==========================================
+   NEKOHUB 🐾 - VISUAL DISCORD DARK MODE
+   ========================================== */
+
 :root {
-    --bg-dark: #313338;
-    --bg-side: #2b2d31;
-    --bg-input: #383a40;
-    --text-main: #dbdee1;
-    --accent: #5865f2;
-    --msg-hover: #2e3035;
+    --bg-dark: #313338;       /* Fundo do chat */
+    --bg-side: #2b2d31;       /* Topo e Sidebar */
+    --bg-input: #383a40;      /* Fundo da barra de digitar */
+    --text-main: #dbdee1;     /* Texto cinza claro */
+    --text-muted: #949ba4;    /* Texto apagado */
+    --accent: #5865f2;        /* Azul Discord (Blurple) */
+    --accent-glow: rgba(88, 101, 242, 0.3);
+    --msg-hover: #2e3035;     /* Efeito ao passar o mouse na mensagem */
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
 
-body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Impede que a tela inteira role */
+}
 
-.app-layout { display: flex; flex-direction: column; height: 100vh; }
+/* --- TELA DE LOGIN --- */
+.login-screen {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #1e1f22;
+}
 
-/* Topo */
+.login-card {
+    background: var(--bg-dark);
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    width: 90%;
+    max-width: 400px;
+}
+
+.logo-text {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.btn-google {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+    transition: 0.2s;
+    margin-top: 20px;
+}
+
+.btn-google:hover {
+    background: #4752c4;
+}
+
+/* --- LAYOUT DO APP --- */
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Topo (Topbar) */
 .topbar {
-    height: 50px; background: var(--bg-side);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 15px; border-bottom: 1px solid rgba(0,0,0,0.2);
+    height: 50px;
+    background: var(--bg-side);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
 }
-.header-left { display: flex; align-items: center; gap: 10px; color: #80848e; }
-.header-left h2 { font-size: 0.9rem; color: #fff; }
-.header-right { display: flex; align-items: center; gap: 10px; }
-.avatar-min { width: 26px; height: 26px; border-radius: 50%; background: #eee; }
 
-/* Chat */
-#chat { flex: 1; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; gap: 4px; }
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+}
 
-.message { padding: 4px 16px; transition: background 0.1s; }
-.message:hover { background: var(--msg-hover); }
-.msg-user { color: #fff; font-weight: 600; font-size: 0.95rem; display: block; }
-.msg-text { color: var(--text-main); font-size: 0.95rem; line-height: 1.4; }
+.header-left h2 {
+    font-size: 0.95rem;
+    color: #fff;
+}
 
-/* Barra de Mensagem */
-.input-area { padding: 0 16px 20px 16px; background: var(--bg-dark); }
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.avatar-min {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #555;
+}
+
+#userNameShort {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* --- ÁREA DO CHAT --- */
+#chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo das Mensagens (Tipo Discord) */
+.message {
+    padding: 4px 16px;
+    margin: 2px 0;
+    transition: background 0.1s;
+}
+
+.message:hover {
+    background: var(--msg-hover);
+}
+
+.msg-user {
+    display: block;
+    font-weight: 600;
+    color: #fff;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.msg-text {
+    color: var(--text-main);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* --- BARRA DE ENTRADA (INPUT) --- */
+.input-area {
+    padding: 0 16px 24px 16px; /* Espaço pro fundo do celular */
+    background: var(--bg-dark);
+}
+
 .input-container {
-    background: var(--bg-input); border-radius: 8px;
-    display: flex; align-items: center; padding: 0 10px; min-height: 44px;
+    background: var(--bg-input);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    min-height: 44px;
 }
-#msg {
-    flex: 1; background: transparent; border: none; color: #fff;
-    padding: 10px; outline: none; font-size: 0.95rem;
-}
-.btn-plus, #sendBtn { background: transparent; border: none; color: #b5bac1; font-size: 1.2rem; cursor: pointer; }
-#sendBtn { color: var(--accent); padding-left: 10px; }
 
-/* Login */
-.login-screen { height: 100vh; display: flex; justify-content: center; align-items: center; background: #1e1f22; }
-.login-card { text-align: center; background: var(--bg-dark); padding: 40px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.btn-google { background: var(--accent); color: #fff; border: none; padding: 12px 25px; border-radius: 5px; font-weight: bold; margin-top: 20px; cursor: pointer; }
- 
+#msg {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 12px 10px;
+    font-size: 1rem;
+    outline: none;
+}
+
+/* Botões do Input */
+.btn-plus, #sendBtn {
+    background: transparent;
+    border: none;
+    color: #b5bac1;
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: 0.2s;
+}
+
+#sendBtn {
+    color: var(--accent); /* Favorecendo o botão de enviar */
+    padding-left: 10px;
+}
+
+#sendBtn:hover {
+    transform: scale(1.1);
+}
+
+/* Custom Scrollbar */
+#chat::-webkit-scrollbar {
+    width: 4px;
+}
+
+#chat::-webkit-scrollbar-thumb {
+    background: #1e1f22;
+    border-radius: 10px;
+}
