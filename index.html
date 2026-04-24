@@ -29,62 +29,39 @@
 
   <section id="app" class="app-layout" hidden>
     
-    <aside class="sidebar" role="navigation" aria-label="Canais e Grupos">
-      <header class="sidebar-header">
-        <span class="sidebar-title">Canais</span>
-        <button id="addGroupBtn" type="button" title="Criar novo canal de conversa" aria-label="Criar novo grupo">
-          <i class="fas fa-plus" aria-hidden="true"></i>
-        </button>
-      </header>
-
-      <nav id="groupsList" class="groups-nav" aria-label="Lista de canais disponíveis">
-        <div class="group-item active" role="button" tabindex="0" aria-current="page">
-          <i class="fas fa-hashtag" aria-hidden="true"></i>
-          <span>geral</span>
-        </div>
-      </nav>
-
-      <footer class="sidebar-footer">
-        <div class="user-profile" id="userProfile" aria-label="Seu perfil">
-          <img id="userAvatar" src="" alt="Sua foto de perfil" class="avatar-min">
-          <div class="user-details">
-            <span id="userNameShort" class="user-name">Usuário</span>
-            <span class="user-status">Online</span>
-          </div>
-        </div>
-      </footer>
-    </aside>
-
     <main class="chat-container">
       
       <header class="topbar">
         <div class="chat-meta">
-          <h2 id="currentGroupName"># geral</h2>
-          <span class="chat-description">Canal principal da comunidade</span>
+          <h1 class="logo-header">NekoHub 🐾</h1>
+          <h2 id="currentGroupName">Chat Global</h2>
         </div>
         
         <div class="topbar-actions">
-          <button id="logoutBtn" type="button" class="btn-logout" aria-label="Sair da conta">
+          <div class="user-info">
+            <img id="userAvatar" src="" alt="Sua foto de perfil" class="avatar-small">
+            <span id="userName" class="user-name">Usuário</span>
+          </div>
+          <button id="logoutBtn" type="button" class="btn-logout" aria-label="Sair da conta" title="Sair">
             <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-            <span>Sair</span>
           </button>
         </div>
       </header>
 
-      <article id="chat" role="log" aria-live="polite" aria-relevant="additions text">
-        </article>
+      <article id="chat" class="chat-messages" role="log" aria-live="polite" aria-relevant="additions text">
+      </article>
 
       <footer class="chat-input-area">
         <div class="input-wrapper">
           <input 
             id="msg" 
             type="text" 
-            placeholder="Conversar em #geral..." 
+            placeholder="Digite sua mensagem..." 
             autocomplete="off"
             enterkeyhint="send"
-            aria-label="Escrever mensagem para o grupo"
+            aria-label="Escrever mensagem"
           >
-          <button id="sendBtn" type="button" aria-label="Enviar mensagem agora">
+          <button id="sendBtn" type="button" aria-label="Enviar mensagem" title="Enviar">
             <i class="fas fa-paper-plane" aria-hidden="true"></i>
           </button>
         </div>
@@ -101,3 +78,4 @@
 
 </body>
 </html>
+ 
