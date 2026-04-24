@@ -1,42 +1,50 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>NekoHub 🐾</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#0d0d0d">
 </head>
-
 <body>
 
-<!-- LOGIN -->
-<div id="login" class="container">
-  <h1>NekoHub 🐾</h1>
-  <button onclick="loginGoogle()">Entrar com Google</button>
-</div>
+  <section id="login" class="container">
+    <div class="login-card">
+      <h1>NekoHub 🐾</h1>
+      <p>O chat da comunidade</p>
+      <button id="loginBtn" class="btn-primary">Entrar com Google</button>
+    </div>
+  </section>
 
-<!-- APP -->
-<div id="app" style="display:none;">
+  <section id="app" hidden>
+    <header class="topbar">
+      <div class="user-info">
+        <img id="userAvatar" src="" alt="" class="avatar-small">
+        <h2 id="welcome"></h2>
+      </div>
+      <button id="logoutBtn" class="btn-secondary">Sair</button>
+    </header>
 
-  <div class="topbar">
-    <h2 id="welcome"></h2>
-    <button onclick="logout()">Sair</button>
-  </div>
+    <main id="chat" aria-live="polite"></main>
 
-  <div id="chat"></div>
+    <footer class="send-box">
+      <input
+        id="msg"
+        type="text"
+        placeholder="Escreva uma mensagem..."
+        autocomplete="off"
+        enterkeyhint="send"
+      >
+      <button id="sendBtn">
+        <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" /></svg>
+      </button>
+    </footer>
+  </section>
 
-  <div class="send-box">
-    <input id="msg" placeholder="Digite uma mensagem...">
-    <button onclick="send()">Enviar</button>
-  </div>
-
-</div>
-
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
-<script src="script.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="script.js"></script>
 </body>
-</html> 
+</html>
