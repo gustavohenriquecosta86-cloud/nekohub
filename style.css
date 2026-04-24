@@ -1,20 +1,17 @@
 /* ==========================================
-   NEKOHUB 🐾 - VISUAL DISCORD DARK MODE
+   NEKOHUB 🐾 - CSS DEFINITIVO (PC & MOBILE)
    ========================================== */
 
 :root {
-    --bg-dark: #313338;       /* Fundo do chat */
-    --bg-side: #2b2d31;       /* Topo e Sidebar */
-    --bg-input: #383a40;      /* Fundo da barra de digitar */
-    --text-main: #dbdee1;     /* Texto cinza claro */
-    --text-muted: #949ba4;    /* Texto apagado */
-    --accent: #5865f2;        /* Azul Discord (Blurple) */
-    --accent-glow: rgba(88, 101, 242, 0.3);
-    --msg-hover: #2e3035;     /* Efeito ao passar o mouse na mensagem */
-    --danger: #da373c;        /* Vermelho Discord para Sair */
+    --bg-dark: #313338;
+    --bg-side: #2b2d31;
+    --bg-input: #383a40;
+    --text-main: #dbdee1;
+    --text-muted: #949ba4;
+    --accent: #5865f2;
+    --danger: #da373c;
 }
 
-/* Reset Básico */
 * {
     margin: 0;
     padding: 0;
@@ -28,7 +25,7 @@ body {
     color: var(--text-main);
     height: 100vh;
     width: 100vw;
-    overflow: hidden; /* Impede que a tela inteira role */
+    overflow: hidden;
 }
 
 /* --- TELA DE LOGIN --- */
@@ -45,43 +42,30 @@ body {
     padding: 40px;
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     width: 90%;
     max-width: 400px;
-}
-
-.logo-text {
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 10px;
 }
 
 .btn-google {
     background: var(--accent);
     color: white;
     border: none;
-    padding: 14px 20px;
+    padding: 14px;
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
     width: 100%;
-    font-size: 1rem;
-    transition: 0.2s;
     margin-top: 20px;
 }
 
-.btn-google:hover {
-    background: #4752c4;
-}
-
-/* --- LAYOUT DO APP --- */
+/* --- LAYOUT PRINCIPAL --- */
 .app-layout {
     display: flex;
     flex-direction: column;
     height: 100vh;
 }
 
-/* Topo (Topbar) - AJUSTADO PARA O BOTÃO SAIR */
+/* TOPO */
 .topbar {
     height: 50px;
     background: var(--bg-side);
@@ -89,20 +73,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0 16px;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
-    flex-shrink: 0; /* Impede o topo de encolher */
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-muted);
-}
-
-.header-left h2 {
-    font-size: 0.95rem;
-    color: #fff;
+    flex-shrink: 0;
 }
 
 .header-right {
@@ -111,131 +82,60 @@ body {
     gap: 12px;
 }
 
-.profile-chip {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
 .avatar-min {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: #555;
 }
 
-#userNameShort {
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-/* BOTÃO DE SAIR - AGORA VISÍVEL */
 .btn-icon {
     background: var(--danger);
     border: none;
     color: white;
-    font-size: 0.9rem;
     padding: 5px 10px;
     border-radius: 4px;
-    cursor: pointer;
     font-weight: bold;
-    transition: 0.2s;
-}
-
-.btn-icon:hover {
-    background: #a1282c;
+    cursor: pointer;
 }
 
 /* --- ÁREA DO CHAT --- */
 #chat {
     flex: 1;
     overflow-y: auto;
-    padding: 10px 0;
+    padding: 20px 0;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    /* Ajuste para o PC: Centraliza o chat e limita a largura */
     width: 100%;
-    max-width: 1000px; 
-    margin: 0 auto;
+    max-width: 900px; /* Limite de largura para o PC */
+    margin: 0 auto;   /* Centraliza no PC */
 }
 
-/* --- BARRA DE ENTRADA (ESTILO FLUTUANTE DISCORD) --- */
-.input-area {
-    padding: 10px 16px 24px 16px; /* Espaço embaixo para não colar no celular */
-    background: var(--bg-dark);
-    flex-shrink: 0;
-    display: flex;
-    justify-content: center; /* Centraliza a barra no PC */
-}
-
-.input-container {
-    background: var(--bg-input);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    min-height: 44px;
-    
-    /* O SEGREDO DO PC: */
-    width: 100%;
-    max-width: 900px; /* Impede que a barra fique infinita no computador */
-    margin: 0 auto;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Dá profundidade */
-}
-
-#msg {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: #fff;
-    padding: 12px 10px;
-    font-size: 1rem;
-    outline: none;
-}
-
-/* Responsividade para o Botão Sair e Topo no PC */
-@media (min-width: 768px) {
-    .topbar {
-        padding: 0 40px; /* Mais respiro nas laterais no PC */
-    }
-    
-    .message {
-        padding: 4px 40px; /* Mensagens mais centralizadas no PC */
-    }
-}
- 
-/* Estilo das Mensagens (Tipo Discord) */
 .message {
-    padding: 4px 16px;
-    margin: 2px 0;
-    transition: background 0.1s;
+    padding: 8px 16px;
+    transition: 0.1s;
 }
 
-.message:hover {
-    background: var(--msg-hover);
-}
+.message:hover { background: #2e3035; }
 
 .msg-user {
     display: block;
     font-weight: 600;
     color: #fff;
     font-size: 0.95rem;
-    margin-bottom: 2px;
 }
 
 .msg-text {
-    color: var(--text-main);
     font-size: 0.95rem;
-    line-height: 1.4;
-    word-break: break-word;
+    color: var(--text-main);
 }
 
-/* --- BARRA DE ENTRADA (INPUT) - AJUSTADA --- */
+/* --- BARRA DE MENSAGEM (O CORAÇÃO DO PROBLEMA) --- */
 .input-area {
-    padding: 10px 16px 20px 16px; /* Reduzi o espaço de baixo para o chat descer menos */
+    width: 100%;
     background: var(--bg-dark);
-    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    padding: 10px 16px 30px 16px; /* Padding bottom alto para flutuar no celular */
 }
 
 .input-container {
@@ -244,6 +144,8 @@ body {
     display: flex;
     align-items: center;
     padding: 0 12px;
+    width: 100%;
+    max-width: 850px; /* Impede de ficar gigante no PC */
     min-height: 44px;
 }
 
@@ -252,36 +154,36 @@ body {
     background: transparent;
     border: none;
     color: #fff;
-    padding: 12px 10px;
-    font-size: 1rem;
+    padding: 12px;
     outline: none;
 }
 
-/* Botões do Input */
-.btn-plus, #sendBtn {
+#sendBtn {
     background: transparent;
     border: none;
-    color: #b5bac1;
+    color: var(--accent);
+    font-size: 1.2rem;
     cursor: pointer;
-    font-size: 1.25rem;
-    transition: 0.2s;
 }
 
-#sendBtn {
-    color: var(--accent); /* Favorecendo o botão de enviar */
-    padding-left: 10px;
+/* --- AJUSTES DE PC --- */
+@media (min-width: 1024px) {
+    .topbar {
+        padding: 0 15%; /* Centraliza o topo no PC */
+    }
+    
+    .input-area {
+        padding: 20px 0 40px 0; /* Mais espaço no PC */
+    }
 }
 
-#sendBtn:hover {
-    transform: scale(1.1);
-}
-
-/* Custom Scrollbar */
-#chat::-webkit-scrollbar {
-    width: 4px;
-}
-
-#chat::-webkit-scrollbar-thumb {
-    background: #1e1f22;
-    border-radius: 10px;
+/* --- AJUSTES DE CELULAR --- */
+@media (max-width: 768px) {
+    #chat {
+        max-width: 100%; /* No celular usa a tela toda */
+    }
+    
+    .input-area {
+        padding: 10px 10px 25px 10px; /* Ajuste fino para a altura do dedo */
+    }
 }
