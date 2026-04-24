@@ -1,10 +1,7 @@
 /**
- * ============================================================================
- * NEKOHUB 🐾 - SCRIPT CORE v5.1 (GLOBAL CHAT ONLY)
- * ============================================================================
+ * NEKOHUB 🐾 - SCRIPT CORE v5.2
  */
 
-// 1. CONFIGURAÇÃO FIREBASE (COM O ENDEREÇO CORRETO!)
 const firebaseConfig = {
   apiKey: "AIzaSyDpIgKw6YiLwmrGwrtnSIuGlJBmyjwfHcc",
   authDomain: "nekohub-3dd91.firebaseapp.com",
@@ -15,88 +12,73 @@ const firebaseConfig = {
   appId: "1:606476027160:web:ed34a10668f358d89dca6d"
 };
 
-// Inicialização segura
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
+// Inicialização
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 
-// 2. ESTADO DO APP
-const State = {
-    user: null,
-    dbPath: "global_messages"
-};
+const State = { user: null, dbPath: "global_messages" };
 
-// 3. MONITOR DE AUTENTICAÇÃO
+// --- MONITOR DE LOGIN ---
 auth.onAuthStateChanged((user) => {
+    console.log("Status da conta mudou. Usuário:", user ? user.displayName : "Ninguém");
+    
     const loginSection = document.getElementById("login");
     const appSection = document.getElementById("app");
 
     if (user) {
         State.user = user;
-        loginSection.hidden = true;
-        appSection.hidden = false;
+        // ESCONDE LOGIN E MOSTRA APP
+        if(loginSection) loginSection.style.display = "none";
+        if(appSection) {
+            appSection.hidden = false;
+            appSection.style.display = "flex";
+        }
         
-        // Atualiza Perfil na UI
-        document.getElementById("userAvatar").src = user.photoURL || "https://via.placeholder.com/30";
+        // Dados do Usuário
+        document.getElementById("userAvatar").src = user.photoURL || "";
         document.getElementById("userNameShort").innerText = user.displayName.split(" ")[0];
         
-        startChat(); // Inicia o chat assim que logar
+        console.log("Entrando no chat...");
+        startChat();
     } else {
-        State.user = null;
-        loginSection.hidden = false;
-        appSection.hidden = true;
+        // MOSTRA LOGIN E ESCONDE APP
+        if(loginSection) loginSection.style.display = "flex";
+        if(appSection) appSection.style.display = "none";
     }
 });
 
-// 4. LÓGICA DE LOGIN / LOGOUT
+// --- BOTÕES ---
 document.getElementById("loginBtn").onclick = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).catch(e => console.error("Erro Login:", e));
+    auth.signInWithPopup(provider).catch(e => alert("Erro no Login: " + e.message));
 };
 
-document.getElementById("logoutBtn").onclick = () => {
-    auth.signOut();
-};
+document.getElementById("logoutBtn").onclick = () => auth.signOut();
 
-// 5. FUNÇÃO DE ENVIAR MENSAGEM
 function sendMessage() {
     const input = document.getElementById("msg");
     const text = input.value.trim();
-
     if (!text || !State.user) return;
 
     db.ref(State.dbPath).push({
         user: State.user.displayName,
         text: text,
         timestamp: firebase.database.ServerValue.TIMESTAMP
-    })
-    .then(() => {
-        input.value = ""; // Limpa o campo
-    })
-    .catch((error) => {
-        console.error("Erro ao enviar:", error);
-        alert("Erro ao enviar: Verifique as regras do Firebase.");
+    }).then(() => {
+        input.value = "";
     });
 }
 
-// Escutas de Eventos (Botão e Tecla Enter)
 document.getElementById("sendBtn").onclick = sendMessage;
-document.getElementById("msg").onkeypress = (e) => {
-    if (e.key === "Enter") sendMessage();
-};
+document.getElementById("msg").onkeypress = (e) => { if (e.key === "Enter") sendMessage(); };
 
-// 6. INICIAR E RENDERIZAR CHAT
+// --- LOGICA DO CHAT ---
 function startChat() {
     const chatDiv = document.getElementById("chat");
-    chatDiv.innerHTML = ""; // Limpa antes de carregar
-
-    // Escuta novas mensagens (Removido o limitToLast para evitar inconsistência)
-    db.ref(State.dbPath).on("child_added", (snapshot) => {
-        const data = snapshot.val();
-        renderMessage(data);
+    db.ref(State.dbPath).off();
+    db.ref(State.dbPath).on("child_added", (snap) => {
+        renderMessage(snap.val());
     });
 }
 
@@ -104,16 +86,11 @@ function renderMessage(data) {
     const chatDiv = document.getElementById("chat");
     const msgEl = document.createElement("div");
     msgEl.className = "message";
-
     msgEl.innerHTML = `
         <span class="msg-user">${data.user}</span>
         <span class="msg-text">${data.text}</span>
     `;
-
     chatDiv.appendChild(msgEl);
-    
-    // Rola para o final automaticamente
     chatDiv.scrollTop = chatDiv.scrollHeight;
 }
- 
  
