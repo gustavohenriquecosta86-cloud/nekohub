@@ -11,6 +11,7 @@ O NekoHub é um sistema de chat e interação desenvolvido inteirament efocado e
 - **Frontend:** HTML5, CSS3 (em eterna briga com a responsividade) e JavaScript.
 - **Backend/Database:** [Firebase](https://firebase.google.com/) (Autenticação e Realtime Database).
 - **Hospedagem:** GitHub Pages.
+- **Feito inteiramente por**: [GitHub] (https://github.com/). 
 
 ## 🛠️ Funcionalidades Atuais
 - Login via Google/Email.
