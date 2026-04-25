@@ -10,8 +10,9 @@ O NekoHub é um sistema de chat e interação desenvolvido inteirament efocado e
 ## 🚀 Tecnologias Utilizadas
 - **Frontend:** HTML5, CSS3 (em eterna briga com a responsividade) e JavaScript.
 - **Backend/Database:** [Firebase](https://firebase.google.com/) (Autenticação e Realtime Database).
-- **Hospedagem:** GitHub Pages.
-- **Feito inteiramente por**: [GitHub] (https://github.com/). 
+- **Hospedagem:** [GitHub Pages](https://pages.github.com/).
+- **Ambiente de Desenvolvimento:** [GitHub](https://github.com/) (Web/Mobile Interface). 
+ 
 
 ## 🛠️ Funcionalidades Atuais
 - Login via Google/Email.
@@ -19,12 +20,13 @@ O NekoHub é um sistema de chat e interação desenvolvido inteirament efocado e
 - Exibição de perfil e avatar.
 - Sistema de mensagens persistentes.
 
+
 ## 🚧 Próximos Passos (Roadmap)
-- [ ] Corrigir o bug do "texto tripa" no Mobile (O "desafio" do momento).
-- [ ] Adicionar Cargos de Hierarquia (`Owner` e `Admin`).
-- [ ] Comandos de moderação.
-- [ ] Sistema de temas.
+- [ ] **Mobile Fix:** Otimização da quebra de texto em dispositivos móveis.
+- [ ] **Hierarchy System:** Implementação de cargos (`Owner`, `Admin`, `User`).
+- [ ] **Safety Tools:** Comandos de moderação e filtros de conteúdo.
+- [ ] **Customization:** Sistema de temas (Dark/Light Mode) e personalização de perfil. 
 
 ## 📜 Licença
-Este projeto está sob a licença **MIT**. Veja o arquivo `LICENSE` para mais detalhes. (Em resumo: você pode usar, modificar e distribuir o código livremente, mas eu não me responsabilizo por nada que você faça com ele!).
+Este projeto está sob a licença **MIT**. Veja o arquivo `LINCESE` para mais detalhes. (Em resumo: você pode usar, modificar e distribuir o código livremente, mas eu não me responsabilizo por nada que você faça com ele!).
 
