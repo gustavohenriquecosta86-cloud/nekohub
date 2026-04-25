@@ -28,5 +28,6 @@ O NekoHub é um sistema de chat e interação desenvolvido inteirament efocado e
 - [ ] **Customization:** Sistema de temas (Dark/Light Mode) e personalização de perfil. 
 
 ## 📜 Licença
-Este projeto está sob a licença **MIT**. Veja o arquivo `LINCESE` para mais detalhes. (Em resumo: você pode usar, modificar e distribuir o código livremente, mas eu não me responsabilizo por nada que você faça com ele!).
+Este projeto está sob a licença **MIT**. Veja o arquivo `LINCESE` para mais detalhes. (Em resumo: você pode usar, modificar o código livremente, mas eu não me responsabilizo por nada que você faça com ele!).
 
+Desenvolvido com amor e ódio ❤️ por: [Gustavo](https://github.com/gustavohenriquecosta86-cloud)*
