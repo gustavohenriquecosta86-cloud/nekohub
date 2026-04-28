@@ -122,3 +122,9 @@ body {
     background: none; border: none; color: var(--accent);
     font-weight: bold; cursor: pointer; padding-left: 10px;
 }
+#chat {
+    flex: 1; /* Faz o chat ocupar o espaço disponível na tela */
+    overflow-y: auto; /* ESSENCIAL: Cria a barra de rolagem! */
+    max-height: 70vh; /* Ou um tamanho fixo, só pra não esticar a tela inteira */
+    padding-bottom: 10px;
+}
